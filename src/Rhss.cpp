@@ -1,4 +1,5 @@
 ﻿#include <Rhss.hpp>
+#include <cmath>
 
 double linear_interp(std::vector<double> X, std::vector<double> Y, double x)
 {
@@ -65,16 +66,22 @@ namespace DP6sem_DZV2_funcs
 	double P(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = 2100 * mass_cons + Sa * (p0N - atm._getPressureCurrent());
-		return res;
+		return 0.0;
+	}
+
+	/// @brief Угол визирования цели.
+	double phi_t(vector<double> st, double t)
+	{
+		return atan2((st[sId(y_t)] - st[sId(y_i)]), (st[sId(x_t)] - st[sId(x_i)]));
 	}
 
 	// Скоростной напор
 	static double q(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = atm._getDensityCurrent() * pow(st[sId(V_k)], 2) / 2;
 		return res;
 	}
@@ -83,7 +90,7 @@ namespace DP6sem_DZV2_funcs
 	static double M(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = st[sId(V_k)] / atm._getSoundSpeedCurrent();
 		return res;
 	}
@@ -92,7 +99,7 @@ namespace DP6sem_DZV2_funcs
 	static double C_xk(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = linear_interp(vec_X_C_xa, vec_Y_C_xa, M(st, t));
 		return res;
 	}
@@ -110,7 +117,7 @@ namespace DP6sem_DZV2_funcs
 	static double C_yk(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = linear_interp(vec_X_C_ya, vec_Y_C_ya, M(st, t)) * alpha(st, t);
 		return res;
 	}
@@ -233,7 +240,7 @@ namespace DP6sem_DZV2_funcs
 	static double res_g_xk(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = -atm._getGravityCurrent() * sin(st[sId(Tetta_k)]);
 		return res;
 	}
@@ -242,7 +249,7 @@ namespace DP6sem_DZV2_funcs
 	static double res_g_yk(vector<double> st, double t)
 	{
 		double res;
-		atmosphere atm(st[sId(y_g)]);
+		atmosphere atm(st[sId(y_i)]);
 		res = -atm._getGravityCurrent() * cos(st[sId(Tetta_k)]);
 		return res;
 	}
@@ -428,7 +435,7 @@ namespace DP6sem_DZV2_funcs
 		return res;
 	}
 
-	double x_g(vector<double> st, double t)
+	double x_i(vector<double> st, double t)
 	{
 		double res;
 		// Должно быть так:
@@ -436,7 +443,7 @@ namespace DP6sem_DZV2_funcs
 		return res;
 	}
 
-	double y_g(vector<double> st, double t)
+	double y_i(vector<double> st, double t)
 	{
 		double res;
 		// Должно быть так:
@@ -444,7 +451,7 @@ namespace DP6sem_DZV2_funcs
 		return res;
 	}
 
-	double z_g(vector<double> st, double t)
+	double z_i(vector<double> st, double t)
 	{
 		double res;
 		// Должно быть так:
@@ -452,15 +459,15 @@ namespace DP6sem_DZV2_funcs
 		return res;
 	}
 
-	double x_c(vector<double> st, double t)
+	double x_t(vector<double> st, double t)
 	{
 		return 28.0;
 	}
-	double y_c(vector<double> st, double t)
+	double y_t(vector<double> st, double t)
 	{
 		return 0.0;
 	}
-	double z_c(vector<double> st, double t)
+	double z_t(vector<double> st, double t)
 	{
 		return 0.0;
 	}

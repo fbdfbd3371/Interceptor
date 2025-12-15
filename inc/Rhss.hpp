@@ -9,6 +9,7 @@ namespace DP6sem_DZV2_funcs
 
 	double cur_mass(vector<double> st, double t);
 	double P(vector<double> st, double t);
+	double phi_t(vector<double> st, double t);
 
 	enum class sId_t
 	{
@@ -21,13 +22,13 @@ namespace DP6sem_DZV2_funcs
 		pitch,
 		yaw,
 		roll,
-		x_g,
-		y_g,
-		z_g,
+		x_i,
+		y_i,
+		z_i,
 
-		x_c,
-		y_c,
-		z_c,
+		x_t,
+		y_t,
+		z_t,
 
 		COUNT
 	};
@@ -58,16 +59,16 @@ namespace DP6sem_DZV2_funcs
 	// roll - ����
 	double roll(vector<double> st, double t);
 
-	// x_g - ���������� �� ��� Oxg
-	double x_g(vector<double> st, double t);
+	// x_i - ���������� �� ��� Oxg
+	double x_i(vector<double> st, double t);
 
-	// y_g - ���������� �� ��� Oyg
-	double y_g(vector<double> st, double t);
+	// y_i - ���������� �� ��� Oyg
+	double y_i(vector<double> st, double t);
 
-	// z_g - ���������� �� ��� Oyg
-	double z_g(vector<double> st, double t);
+	// z_i - ���������� �� ��� Oyg
+	double z_i(vector<double> st, double t);
 
-	double x_c(vector<double> st, double t);
-	double y_c(vector<double> st, double t);
-	double z_c(vector<double> st, double t);
+	double x_t(vector<double> st, double t);
+	double y_t(vector<double> st, double t);
+	double z_t(vector<double> st, double t);
 }

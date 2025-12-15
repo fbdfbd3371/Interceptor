@@ -15,12 +15,12 @@ int main()
 	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::pitch);
 	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::yaw);
 	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::roll);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_g);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_g);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_g);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_c);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_c);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_c);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_i);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_i);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_i);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_t);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_t);
+	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_t);
 
 	inputDescr.T0 = 0;
 	inputDescr.Tk = 4.73;
@@ -54,12 +54,13 @@ int main()
 	inputDescr.prm_names.push_back("y, m");
 	inputDescr.prm_names.push_back("z, m");
 
-	inputDescr.prm_names.push_back("x_c, m");
-	inputDescr.prm_names.push_back("y_c, m");
-	inputDescr.prm_names.push_back("z_c, m");
+	inputDescr.prm_names.push_back("x_t, m");
+	inputDescr.prm_names.push_back("y_t, m");
+	inputDescr.prm_names.push_back("z_t, m");
 
 	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::cur_mass, "m, kg"));
 	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::P, "P, N"));
+	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::phi_t, "phi_t, rad"));
 
 	std::cout << "Processing starts!" << std::endl;
 
