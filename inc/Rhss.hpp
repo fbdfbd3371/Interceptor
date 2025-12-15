@@ -7,7 +7,9 @@ namespace DP6sem_DZV2_funcs
 {
 	using namespace std;
 
-	// enum ������������ ��� ������� st - system state
+	double cur_mass(vector<double> st, double t);
+	double P(vector<double> st, double t);
+
 	enum class sId_t
 	{
 		V_k = 0,
@@ -23,29 +25,13 @@ namespace DP6sem_DZV2_funcs
 		y_g,
 		z_g,
 
+		x_c,
+		y_c,
+		z_c,
+
 		COUNT
 	};
 
-	/*
-	 * �������
-	 * ��������� � �������� k - ������ �������� � ����������� ��
-	 * ��������� � �������� g - ������ �������� � ���������� ������ ��
-	 * ��������� ��� ������� �������� � ��������� ��
-	 *
-	 *
-	 * �������� - yaw
-	 * ������ - pitch
-	 * ���� - roll
-	 *
-	 * ���� �������� � ��������� ��
-	 * ���������������� ���� �������� � ����������� ��
-	 *
-	 */
-
-	//	������ ����� ���������������� ���������:
-	//	st - system state - ������ ��������� ������� ��
-
-	// Vk - �������� �� ��� Oxk ����������� ��
 	double V_k(vector<double> st, double t);
 
 	// Tetta_k - ���������� ����
@@ -80,4 +66,8 @@ namespace DP6sem_DZV2_funcs
 
 	// z_g - ���������� �� ��� Oyg
 	double z_g(vector<double> st, double t);
+
+	double x_c(vector<double> st, double t);
+	double y_c(vector<double> st, double t);
+	double z_c(vector<double> st, double t);
 }

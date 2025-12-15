@@ -1,15 +1,15 @@
 ﻿#include <Rhss.hpp>
 
-
 double linear_interp(std::vector<double> X, std::vector<double> Y, double x)
 {
 	double res;
 
 	int i0 = 0;
 	// в цикле ищется интервал, в котором будем интерполировать
-	for (int i = 0; i < X.size(); i++) 
+	for (int i = 0; i < X.size(); i++)
 	{
-		if (x < X[i]) {
+		if (x < X[i])
+		{
 			i0 = i;
 			break;
 		}
@@ -26,7 +26,7 @@ double linear_interp(std::vector<double> X, std::vector<double> Y, double x)
 
 namespace DP6sem_DZV2_funcs
 {
-#define sId(x) (int)sId_t::x	
+#define sId(x) (int)sId_t::x
 	using namespace std;
 
 	double m0 = 1160;
@@ -36,29 +36,25 @@ namespace DP6sem_DZV2_funcs
 	double ld_lc = 0.21;
 	double Sa = 0.15;
 	double Sm = 0.2289;
-	double mass_cons = 81;	// mass consumption
+	double mass_cons = 81; // mass consumption
 	double p0N = 101325;
 
 	vector<double> vec_X_C_xa = {
-		0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0
-	};
+		0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
 
 	vector<double> vec_Y_C_xa = {
-			0.30, 0.30, 0.55, 0.70, 0.84, 0.86, 0.87, 0.83, 0.80, 0.79, 0.65, 0.55, 0.50, 0.45, 0.40
-	};
+		0.30, 0.30, 0.55, 0.70, 0.84, 0.86, 0.87, 0.83, 0.80, 0.79, 0.65, 0.55, 0.50, 0.45, 0.40};
 
 	vector<double> vec_X_C_ya = {
-			0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0
-	};
+		0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
 
 	vector<double> vec_Y_C_ya = {
-			0.25, 0.25, 0.25, 0.20, 0.30, 0.31, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25
-	};
+		0.25, 0.25, 0.25, 0.20, 0.30, 0.31, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25};
 
 	//--------Вспомогательные функции
 
 	// Тяга - в связанной СК
-	static double cur_mass(vector<double> st, double t)
+	double cur_mass(vector<double> st, double t)
 	{
 		double res;
 		res = m0 - mass_cons * t;
@@ -66,7 +62,7 @@ namespace DP6sem_DZV2_funcs
 	}
 
 	// Тяга - в связанной СК
-	static double P(vector<double> st, double t)
+	double P(vector<double> st, double t)
 	{
 		double res;
 		atmosphere atm(st[sId(y_g)]);
@@ -105,8 +101,8 @@ namespace DP6sem_DZV2_funcs
 	static double alpha(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = st[sId(pitch)] - st[sId(Tetta_k)];//?????
+		// Должно быть так:
+		res = st[sId(pitch)] - st[sId(Tetta_k)]; //?????
 		return res;
 	}
 
@@ -115,7 +111,7 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		atmosphere atm(st[sId(y_g)]);
-		res = linear_interp(vec_X_C_ya, vec_Y_C_ya, M(st, t))*alpha(st,t);
+		res = linear_interp(vec_X_C_ya, vec_Y_C_ya, M(st, t)) * alpha(st, t);
 		return res;
 	}
 
@@ -123,8 +119,8 @@ namespace DP6sem_DZV2_funcs
 	static double betta(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = st[sId(Psi_k)] - st[sId(yaw)];//??????
+		// Должно быть так:
+		res = st[sId(Psi_k)] - st[sId(yaw)]; //??????
 		return res;
 	}
 
@@ -148,8 +144,8 @@ namespace DP6sem_DZV2_funcs
 	static double resR_zk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = 0;  // = 0, так как рассматриваем задачу 5 семестра
+		// Должно быть так:
+		res = 0; // = 0, так как рассматриваем задачу 5 семестра
 		return res;
 	}
 
@@ -157,8 +153,8 @@ namespace DP6sem_DZV2_funcs
 	static double resFr_xk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = 0;  // = 0, так как рассматриваем задачу 5 семестра
+		// Должно быть так:
+		res = 0; // = 0, так как рассматриваем задачу 5 семестра
 		return res;
 	}
 
@@ -166,8 +162,8 @@ namespace DP6sem_DZV2_funcs
 	static double resFr_yk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = 0;  // = 0, так как рассматриваем задачу 5 семестра
+		// Должно быть так:
+		res = 0; // = 0, так как рассматриваем задачу 5 семестра
 		return res;
 	}
 
@@ -175,8 +171,8 @@ namespace DP6sem_DZV2_funcs
 	static double resFr_zk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = 0;  // = 0, так как рассматриваем задачу 5 семестра
+		// Должно быть так:
+		res = 0; // = 0, так как рассматриваем задачу 5 семестра
 		return res;
 	}
 
@@ -193,8 +189,7 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		double gamma_c = 0;
-		res = P(st, t) * (sin(alpha(st, t)) * cos(gamma_c) 
-			+ sin(gamma_c) * cos(alpha(st, t)) * sin(betta(st, t)));
+		res = P(st, t) * (sin(alpha(st, t)) * cos(gamma_c) + sin(gamma_c) * cos(alpha(st, t)) * sin(betta(st, t)));
 		return res;
 	}
 
@@ -203,8 +198,7 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		double gamma_c = 0;
-		res = P(st, t) * (sin(gamma_c) * sin(alpha(st, t)) 
-			- cos(gamma_c) * cos(alpha(st, t)) * sin(betta(st, t)));
+		res = P(st, t) * (sin(gamma_c) * sin(alpha(st, t)) - cos(gamma_c) * cos(alpha(st, t)) * sin(betta(st, t)));
 		return res;
 	}
 
@@ -212,7 +206,7 @@ namespace DP6sem_DZV2_funcs
 	static double resF_xk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = resP_xk(st, t) + resFr_xk(st, t) + resR_xk(st, t);
 		return res;
 	}
@@ -221,7 +215,7 @@ namespace DP6sem_DZV2_funcs
 	static double resF_yk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = resP_yk(st, t) + resFr_yk(st, t) + resR_yk(st, t);
 		return res;
 	}
@@ -230,11 +224,10 @@ namespace DP6sem_DZV2_funcs
 	static double resF_zk(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = resP_zk(st, t) + resFr_zk(st, t) + resR_zk(st, t);
 		return res;
 	}
-
 
 	// Проекция суммы всех ускорений на траекторную ось Ox_k
 	static double res_g_xk(vector<double> st, double t)
@@ -282,7 +275,7 @@ namespace DP6sem_DZV2_funcs
 	static double resMst_z(vector<double> st, double t)
 	{
 		double res;
-		res = (-1)*(C_xk(st, t) + C_yk(st, t))* Sm* q(st, t)* ld_lc;
+		res = (-1) * (C_xk(st, t) + C_yk(st, t)) * Sm * q(st, t) * ld_lc;
 		return res;
 	}
 
@@ -354,10 +347,9 @@ namespace DP6sem_DZV2_funcs
 	static double resM_z(vector<double> st, double t)
 	{
 		double res;
-		res = resMst_z(st, t) + resMd_z(st, t) + resMr_z(st,t);
+		res = resMst_z(st, t) + resMd_z(st, t) + resMr_z(st, t);
 		return res;
 	}
-
 
 	//--------ПРАВЫЕ ЧАСТИ ДУ-------
 
@@ -372,17 +364,16 @@ namespace DP6sem_DZV2_funcs
 	double Tetta_k(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
 		return res;
- 	}
+	}
 
 	double Psi_k(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = (-1) * resF_zk(st, t)
-			/ (cur_mass(st,t) * st[sId(V_k)] * cos(st[sId(Tetta_k)]));
+		// Должно быть так:
+		res = (-1) * resF_zk(st, t) / (cur_mass(st, t) * st[sId(V_k)] * cos(st[sId(Tetta_k)]));
 		return res;
 	}
 
@@ -390,23 +381,23 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		// Должно быть так:
-		res = 0;// из условий дз 5 сем
+		res = 0; // из условий дз 5 сем
 		return res;
 	}
 
 	double omg_y(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = 0;// из условий дз 5 сем
+		// Должно быть так:
+		res = 0; // из условий дз 5 сем
 		return res;
 	}
 
 	double omg_z(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
-		res = resM_z(st, t) * alpha(st,t) / Jz;
+		// Должно быть так:
+		res = resM_z(st, t) * alpha(st, t) / Jz;
 		return res;
 	}
 
@@ -423,7 +414,7 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		double gamma = 0;
-		// Должно быть так: 
+		// Должно быть так:
 		res = (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma)) / cos(st[sId(pitch)]);
 		return res;
 	}
@@ -432,16 +423,15 @@ namespace DP6sem_DZV2_funcs
 	{
 		double res;
 		double gamma = 0;
-		// Должно быть так: 
-		res = st[sId(omg_x)] - tan(st[sId(pitch)]) 
-			* (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
+		// Должно быть так:
+		res = st[sId(omg_x)] - tan(st[sId(pitch)]) * (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
 		return res;
 	}
 
 	double x_g(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = st[sId(V_k)] * cos(st[sId(Tetta_k)]) * cos(st[sId(Psi_k)]);
 		return res;
 	}
@@ -449,7 +439,7 @@ namespace DP6sem_DZV2_funcs
 	double y_g(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = st[sId(V_k)] * sin(st[sId(Tetta_k)]);
 		return res;
 	}
@@ -457,8 +447,21 @@ namespace DP6sem_DZV2_funcs
 	double z_g(vector<double> st, double t)
 	{
 		double res;
-		// Должно быть так: 
+		// Должно быть так:
 		res = -st[sId(V_k)] * cos(st[sId(Tetta_k)]) * sin(st[sId(Psi_k)]);
 		return res;
+	}
+
+	double x_c(vector<double> st, double t)
+	{
+		return 28.0;
+	}
+	double y_c(vector<double> st, double t)
+	{
+		return 0.0;
+	}
+	double z_c(vector<double> st, double t)
+	{
+		return 0.0;
 	}
 }

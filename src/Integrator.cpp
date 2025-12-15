@@ -1,5 +1,6 @@
-#include <Integrator.hpp>
+#include <iostream>
 #include <fstream>
+#include <Integrator.hpp>
 
 namespace uIntegr
 {
@@ -11,84 +12,91 @@ namespace uIntegr
 		outFile << "t, sec" << "\t";
 		for (auto el : prm.prm_names)
 			outFile << el << "\t";
+		for (auto el : prm.funcs)
+			outFile << el.second << "\t";
 		outFile << std::endl;
 
 		map<string, vector<double>> allParams;
-		for (int i = 0; i < prm.funcs.size(); i++)
+		for (int i = 0; i < prm.rhss.size(); i++)
 		{
 			allParams.emplace(prm.prm_names[i], NULL);
 		}
 		allParams.emplace(prm.integr_param_name, NULL);
 
-		vector<double> state_sys(prm.funcs.size());
+		vector<double> state_sys(prm.rhss.size());
 		state_sys = prm.init_conds;
 
-		vector<double> cur_params(prm.funcs.size());
+		vector<double> cur_params(prm.rhss.size());
 		cur_params = prm.init_conds;
 
-		for (double t = prm.a; t < prm.b; t += prm.step)
+		for (double t = prm.T0; t < prm.Tk; t += prm.step)
 		{
-			vector<double> k1(prm.funcs.size());
-			vector<double> k2(prm.funcs.size());
-			vector<double> k3(prm.funcs.size());
-			vector<double> k4(prm.funcs.size());
+			vector<double> k1(prm.rhss.size());
+			vector<double> k2(prm.rhss.size());
+			vector<double> k3(prm.rhss.size());
+			vector<double> k4(prm.rhss.size());
 
 			// ------------k1-------------
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
-				k1[i] = prm.funcs[i](state_sys, t);
+				k1[i] = prm.rhss[i](state_sys, t);
 			}
 
 			// ------------k2-------------
 			state_sys = cur_params;
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				state_sys[i] += 0.5 * k1[i] * prm.step;
 			}
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
-				k2[i] = prm.funcs[i](state_sys, t + prm.step / 2);
+				k2[i] = prm.rhss[i](state_sys, t + prm.step / 2);
 			}
 
 			// ------------k3-------------
 			state_sys = cur_params;
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				state_sys[i] += 0.5 * k2[i] * prm.step;
 			}
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
-				k3[i] = prm.funcs[i](state_sys, t + prm.step / 2);
+				k3[i] = prm.rhss[i](state_sys, t + prm.step / 2);
 			}
 
 			// ------------k4-------------
 			state_sys = cur_params;
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				state_sys[i] += k3[i] * prm.step;
 			}
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
-				k4[i] = prm.funcs[i](state_sys, t + prm.step);
+				k4[i] = prm.rhss[i](state_sys, t + prm.step);
 			}
 
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				cur_params[i] += (prm.step / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
 			}
 
 			outFile << t << "\t";
-			for (int i = 0; i < prm.funcs.size(); i++)
+			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				allParams[prm.prm_names[i]].push_back(cur_params[i]); // *180 / 3.1415926535);
 
 				outFile << cur_params[i] << "\t";
+			}
+
+			for (auto el : prm.funcs)
+			{
+				outFile << el.first(cur_params, t + prm.step) << "\t";
 			}
 			outFile << std::endl;
 
