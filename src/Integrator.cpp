@@ -4,6 +4,8 @@
 
 namespace uIntegr
 {
+	inputDescr_t inputDescr;
+
 	map<string, vector<double>> solve_system(inputDescr_t prm)
 	{
 		static ofstream outFile;
@@ -11,15 +13,17 @@ namespace uIntegr
 
 		outFile << "t, sec" << "\t";
 		for (auto el : prm.prm_names)
-			outFile << el << "\t";
+			if (el.second)
+				outFile << el.first << "\t";
 		for (auto el : prm.funcs)
-			outFile << el.second << "\t";
+			if (std::get<2>(el))
+				outFile << std::get<1>(el) << "\t";
 		outFile << std::endl;
 
 		map<string, vector<double>> allParams;
 		for (int i = 0; i < prm.rhss.size(); i++)
 		{
-			allParams.emplace(prm.prm_names[i], NULL);
+			allParams.emplace(prm.prm_names[i].first, NULL);
 		}
 		allParams.emplace(prm.integr_param_name, NULL);
 
@@ -89,14 +93,16 @@ namespace uIntegr
 			outFile << t + prm.step << "\t";
 			for (int i = 0; i < prm.rhss.size(); i++)
 			{
-				allParams[prm.prm_names[i]].push_back(cur_params[i]); // *180 / 3.1415926535);
+				allParams[prm.prm_names[i].first].push_back(cur_params[i]); // *180 / 3.1415926535);
 
-				outFile << cur_params[i] << "\t";
+				if(prm.prm_names[i].second)
+					outFile << cur_params[i] << "\t";
 			}
 
 			for (auto el : prm.funcs)
 			{
-				outFile << el.first(cur_params, t + prm.step) << "\t";
+				if (std::get<2>(el))
+					outFile << std::get<0>(el)(cur_params, t + prm.step) << "\t";
 			}
 			outFile << std::endl;
 

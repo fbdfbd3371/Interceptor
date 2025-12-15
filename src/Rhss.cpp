@@ -1,5 +1,7 @@
-﻿#include <Rhss.hpp>
-#include <cmath>
+﻿#include <cmath>
+#include <optional>
+#include <Rhss.hpp>
+#include <Integrator.hpp>
 
 double linear_interp(std::vector<double> X, std::vector<double> Y, double x)
 {
@@ -33,7 +35,7 @@ double Jx = 0;
 double Jy = 0;
 double Jz = 0.2;
 double ld_lc = 0.21;
-double Sm = 0.007289;
+double Sm = 0.017289;
 double p0N = 101325;
 
 vector<double> vec_X_C_xa = {
@@ -59,13 +61,26 @@ double cur_mass(vector<double> st, double t)
 // Тяга - в связанной СК
 double P(vector<double> st, double t)
 {
-	return 80.0;
+	return 40.0;
 }
 
 /// @brief Угол визирования цели.
 double phi_t(vector<double> st, double t)
 {
 	return atan2((st[sId(y_t)] - st[sId(y_i)]), (st[sId(x_t)] - st[sId(x_i)]));
+}
+
+double phiDeriv_t(vector<double> st, double t)
+{
+	double res = 0.0;
+	static std::optional<double> prevVal = std::nullopt;
+	double curPhi = phi_t(st, t);
+	if (prevVal.has_value())
+		res = (curPhi - prevVal.value()) / uIntegr::inputDescr.step;
+
+	prevVal = curPhi;
+
+	return res;
 }
 
 // Скоростной напор
@@ -363,7 +378,7 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	res = resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
+	res = 0.0; // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
 	return res;
 }
 
