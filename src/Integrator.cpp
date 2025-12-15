@@ -86,7 +86,7 @@ namespace uIntegr
 				cur_params[i] += (prm.step / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
 			}
 
-			outFile << t << "\t";
+			outFile << t + prm.step << "\t";
 			for (int i = 0; i < prm.rhss.size(); i++)
 			{
 				allParams[prm.prm_names[i]].push_back(cur_params[i]); // *180 / 3.1415926535);

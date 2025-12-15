@@ -6,26 +6,26 @@ int main()
 {
 	uIntegr::inputDescr_t inputDescr;
 
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::V_k);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::Tetta_k);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::Psi_k);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::omg_x);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::omg_y);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::omg_z);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::pitch);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::yaw);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::roll);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_i);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_i);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_i);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::x_t);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::y_t);
-	inputDescr.rhss.push_back(DP6sem_DZV2_funcs::z_t);
+	inputDescr.rhss.push_back(V_k);
+	inputDescr.rhss.push_back(Tetta_k);
+	inputDescr.rhss.push_back(Psi_k);
+	inputDescr.rhss.push_back(omg_x);
+	inputDescr.rhss.push_back(omg_y);
+	inputDescr.rhss.push_back(omg_z);
+	inputDescr.rhss.push_back(pitch);
+	inputDescr.rhss.push_back(yaw);
+	inputDescr.rhss.push_back(roll);
+	inputDescr.rhss.push_back(x_i);
+	inputDescr.rhss.push_back(y_i);
+	inputDescr.rhss.push_back(z_i);
+	inputDescr.rhss.push_back(x_t);
+	inputDescr.rhss.push_back(y_t);
+	inputDescr.rhss.push_back(z_t);
 
 	inputDescr.T0 = 0;
-	inputDescr.Tk = 4.73;
+	inputDescr.Tk = 15;
 	inputDescr.step = 0.1;
-	inputDescr.init_conds.push_back(54);			  // V
+	inputDescr.init_conds.push_back(1);			  // V
 	inputDescr.init_conds.push_back((39) * PI / 180); // THETA
 	inputDescr.init_conds.push_back(0);				  // PSI,
 	inputDescr.init_conds.push_back(0);				  // omega_x,
@@ -50,17 +50,17 @@ int main()
 	inputDescr.prm_names.push_back("pitch, rad");
 	inputDescr.prm_names.push_back("yaw, rad");
 	inputDescr.prm_names.push_back("roll, rad");
-	inputDescr.prm_names.push_back("x, m");
-	inputDescr.prm_names.push_back("y, m");
-	inputDescr.prm_names.push_back("z, m");
+	inputDescr.prm_names.push_back("x_i, m");
+	inputDescr.prm_names.push_back("y_i, m");
+	inputDescr.prm_names.push_back("z_i, m");
 
 	inputDescr.prm_names.push_back("x_t, m");
 	inputDescr.prm_names.push_back("y_t, m");
 	inputDescr.prm_names.push_back("z_t, m");
 
-	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::cur_mass, "m, kg"));
-	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::P, "P, N"));
-	inputDescr.funcs.emplace_back(std::pair(DP6sem_DZV2_funcs::phi_t, "phi_t, rad"));
+	inputDescr.funcs.emplace_back(std::pair(cur_mass, "m, kg"));
+	inputDescr.funcs.emplace_back(std::pair(P, "P, N"));
+	inputDescr.funcs.emplace_back(std::pair(phi_t, "phi_t, rad"));
 
 	std::cout << "Processing starts!" << std::endl;
 
