@@ -61,7 +61,9 @@ int main()
 	inputDescr.funcs.emplace_back(cur_mass, "m, kg", false);
 	inputDescr.funcs.emplace_back(P, "P, N", false);
 	inputDescr.funcs.emplace_back(phi_t, "phi_t, rad", true);
-	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", true);
+	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", false);
+	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
+	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 
 	std::cout << "Processing starts!" << std::endl;
 

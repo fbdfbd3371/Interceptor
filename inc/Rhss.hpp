@@ -9,6 +9,8 @@ double cur_mass(vector<double> st, double t);
 double P(vector<double> st, double t);
 double phi_t(vector<double> st, double t);
 double phiDeriv_t(vector<double> st, double t);
+double phiDerivDeg(vector<double> st, double t);
+double THETADeg(vector<double> st, double t);
 
 enum class sId_t
 {

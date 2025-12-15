@@ -1,5 +1,6 @@
 ﻿#include <cmath>
 #include <optional>
+#include <iostream>
 #include <Rhss.hpp>
 #include <Integrator.hpp>
 
@@ -37,6 +38,7 @@ double Jz = 0.2;
 double ld_lc = 0.21;
 double Sm = 0.017289;
 double p0N = 101325;
+double propoN{10.0};
 
 vector<double> vec_X_C_xa = {
 	0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
@@ -74,13 +76,47 @@ double phiDeriv_t(vector<double> st, double t)
 {
 	double res = 0.0;
 	static std::optional<double> prevVal = std::nullopt;
+	static double t_prev{-1};
+	static double res_prev{-1};
+
+	if (t_prev == t)
+		return res_prev;
+
 	double curPhi = phi_t(st, t);
+
+	static double prevPhi = curPhi;
+
+	for (;;)
+	{
+		double d = curPhi - prevPhi;
+		if (d > M_PI)
+			curPhi -= 2 * M_PI;
+		else if (d < -M_PI)
+			curPhi += 2 * M_PI;
+		else
+			break;
+	}
+
+	prevPhi = curPhi;
+
 	if (prevVal.has_value())
 		res = (curPhi - prevVal.value()) / uIntegr::inputDescr.step;
 
 	prevVal = curPhi;
 
+	res_prev = res;
+	t_prev = t;
 	return res;
+}
+
+double phiDerivDeg(vector<double> st, double t)
+{
+	return phiDeriv_t(st, t) * 180.0 / M_PI;
+}
+
+double THETADeg(vector<double> st, double t)
+{
+	return st[sId(Tetta_k)] * 180.0 / M_PI;
 }
 
 // Скоростной напор
@@ -378,8 +414,10 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	res = 0.0; // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
-	return res;
+	double phiDeriv = phiDeriv_t(st, t); // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
+	// std::cout << "t: " << t << "\tphiDeriv: " << phiDeriv << std::endl;
+
+	return phiDeriv * propoN;
 }
 
 double Psi_k(vector<double> st, double t)
