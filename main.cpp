@@ -2,9 +2,13 @@
 #include <tuple>
 #include <Integrator.hpp>
 #include <Rhss.hpp>
+#include <fenv.h>
+#pragma STDC FENV_ACCESS ON
 
 int main()
 {
+	feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
+
 	using namespace uIntegr;
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -23,8 +27,8 @@ int main()
 	inputDescr.rhss.push_back(z_t);
 
 	inputDescr.T0 = 0;
-	inputDescr.Tk = 9;
-	inputDescr.step = 0.1;
+	inputDescr.Tk = 11;
+	inputDescr.step = 0.01;
 	inputDescr.init_conds.push_back(1);				  // V
 	inputDescr.init_conds.push_back((45) * PI / 180); // THETA
 	inputDescr.init_conds.push_back(0);				  // PSI,

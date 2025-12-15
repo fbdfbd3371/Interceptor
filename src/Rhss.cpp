@@ -38,7 +38,7 @@ double Jz = 0.2;
 double ld_lc = 0.21;
 double Sm = 0.017289;
 double p0N = 101325;
-double propoN{10.0};
+double propoN{60.0};
 
 vector<double> vec_X_C_xa = {
 	0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
@@ -448,7 +448,9 @@ double omg_z(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	res = resM_z(st, t) * alpha(st, t) / Jz;
+	double resM_z_val = resMr_z(st, t);
+	double alpha_val = alpha(st, t);
+	res = resM_z_val * alpha_val / Jz;
 	return res;
 }
 
