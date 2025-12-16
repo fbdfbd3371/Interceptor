@@ -38,7 +38,7 @@ double Jz = 0.2;
 double ld_lc = 0.21;
 double Sm = 0.017289;
 double p0N = 101325;
-double propoN{60.0};
+double propoN{80.0};
 
 vector<double> vec_X_C_xa = {
 	0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
@@ -117,6 +117,16 @@ double phiDerivDeg(vector<double> st, double t)
 double THETADeg(vector<double> st, double t)
 {
 	return st[sId(Tetta_k)] * 180.0 / M_PI;
+}
+
+double r(vector<double> st, double t)
+{
+	return sqrt(pow(st[sId(x_t)] - st[sId(x_i)], 2) + pow(st[sId(y_t)] - st[sId(y_i)], 2) + pow(st[sId(z_t)] - st[sId(z_i)], 2));
+}
+
+bool stopCriteria(vector<double> st, double t)
+{
+	return r(st, t) < 0.6;
 }
 
 // Скоростной напор

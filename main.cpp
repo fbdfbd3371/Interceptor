@@ -27,7 +27,7 @@ int main()
 	inputDescr.rhss.push_back(z_t);
 
 	inputDescr.T0 = 0;
-	inputDescr.Tk = 11;
+	inputDescr.Tk = 20;
 	inputDescr.step = 0.01;
 	inputDescr.init_conds.push_back(1);				  // V
 	inputDescr.init_conds.push_back((45) * PI / 180); // THETA
@@ -68,6 +68,9 @@ int main()
 	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", false);
 	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
+	inputDescr.funcs.emplace_back(r, "r, m", true);
+
+	inputDescr.stopCriteria = stopCriteria;
 
 	std::cout << "Processing starts!" << std::endl;
 

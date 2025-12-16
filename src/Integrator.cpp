@@ -6,6 +6,11 @@ namespace uIntegr
 {
 	inputDescr_t inputDescr;
 
+	bool idleStopCriteria(vector<double>, double)
+	{
+		return false;
+	}
+
 	map<string, vector<double>> solve_system(inputDescr_t prm)
 	{
 		static ofstream outFile;
@@ -95,7 +100,7 @@ namespace uIntegr
 			{
 				allParams[prm.prm_names[i].first].push_back(cur_params[i]); // *180 / 3.1415926535);
 
-				if(prm.prm_names[i].second)
+				if (prm.prm_names[i].second)
 					outFile << cur_params[i] << "\t";
 			}
 
@@ -107,6 +112,12 @@ namespace uIntegr
 			outFile << std::endl;
 
 			allParams[prm.integr_param_name].push_back(t);
+
+			if (prm.stopCriteria(cur_params, t + prm.step))
+			{
+				std::cout << "Integrating stopped by stop criteria!" << std::endl;
+				break;
+			}
 		}
 
 		outFile.close();

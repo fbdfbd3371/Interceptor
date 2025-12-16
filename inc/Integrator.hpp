@@ -10,6 +10,8 @@ namespace uIntegr
 	extern inputDescr_t inputDescr;
 
 	using namespace std;
+	bool idleStopCriteria(vector<double>, double);
+
 	typedef function<double(vector<double>, double)> rightPtDU_t;
 	struct inputDescr_t
 	{
@@ -21,6 +23,7 @@ namespace uIntegr
 		double step;
 		vector<std::pair<string, bool>> prm_names;
 		string integr_param_name;
+		function<bool(vector<double>, double)> stopCriteria = function(idleStopCriteria);
 	};
 
 	map<string, vector<double>> solve_system(inputDescr_t prm);

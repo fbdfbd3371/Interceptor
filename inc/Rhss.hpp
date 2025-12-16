@@ -11,6 +11,10 @@ double phi_t(vector<double> st, double t);
 double phiDeriv_t(vector<double> st, double t);
 double phiDerivDeg(vector<double> st, double t);
 double THETADeg(vector<double> st, double t);
+// Расстояние между перехватчиком и целью, [м].
+double r(vector<double> st, double t);
+/// @brief  Критерий останова по величине промаха.
+bool stopCriteria(vector<double> st, double t);
 
 enum class sId_t
 {
