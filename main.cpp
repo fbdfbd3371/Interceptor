@@ -9,7 +9,9 @@ int main()
 {
 	feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
 
-	using namespace uIntegr;
+	double Vi0{15.0};
+	double xt0{-250};
+
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
 	inputDescr.rhss.push_back(Psi_k);
@@ -29,7 +31,7 @@ int main()
 	inputDescr.T0 = 0;
 	inputDescr.Tk = 20;
 	inputDescr.step = 0.01;
-	inputDescr.init_conds.push_back(15);			  // V
+	inputDescr.init_conds.push_back(Vi0);			  // V
 	inputDescr.init_conds.push_back((45) * PI / 180); // THETA
 	inputDescr.init_conds.push_back(0);				  // PSI,
 	inputDescr.init_conds.push_back(0);				  // omega_x,
@@ -41,7 +43,7 @@ int main()
 	inputDescr.init_conds.push_back(0);				  // x
 	inputDescr.init_conds.push_back(2);				  // y,
 	inputDescr.init_conds.push_back(0);				  // z
-	inputDescr.init_conds.push_back(-200);			  // x_c
+	inputDescr.init_conds.push_back(xt0);			  // x_c
 	inputDescr.init_conds.push_back(250);			  // y_c
 	inputDescr.init_conds.push_back(0);				  // z_c
 
@@ -69,13 +71,25 @@ int main()
 	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", true);
-	inputDescr.funcs.emplace_back(Vc, "rDeriv, m/s", true);
+	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
 
 	inputDescr.stopCriteria = stopCriteria;
 
+	outFile.open("output.txt");
+	outFile << "propoN, [-]\t" << inputDescr.propoN << std::endl;
+	outFile << "Vi0, [m/s]\t" << Vi0 << std::endl;
+	outFile << "Vt, [m/s]\t" << inputDescr.Vt << std::endl;
+	outFile << "m, [kg]\t" << inputDescr.m << std::endl;
+	outFile << "Jz, [kg/m]\t" << inputDescr.Jz << std::endl;
+	outFile << "Sm, [m^2]\t" << inputDescr.Sm << std::endl;
+	outFile << "ld_lc, [m]\t" << inputDescr.ld_lc << std::endl;
+	outFile << "Vc_min, [m/s]\t" << inputDescr.Vc_min << std::endl;
+	outFile << "Kp, [-]\t" << inputDescr.Kp << std::endl;
+	outFile << "xt0, [m]\t" << xt0 << std::endl;
+
 	std::cout << "Processing starts!" << std::endl;
 
-	uIntegr::solve_system(inputDescr);
+	solve_system(inputDescr);
 
 	std::cout << "Processing done!" << std::endl;
 	return 0;

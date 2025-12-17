@@ -31,14 +31,7 @@ double linear_interp(std::vector<double> X, std::vector<double> Y, double x)
 #define sId(x) (int)sId_t::x
 using namespace std;
 
-double m0 = 2;
-double Jx = 0;
-double Jy = 0;
-double Jz = 0.2;
-double ld_lc = 0.21;
-double Sm = 0.017289;
 double p0N = 101325;
-double propoN{80.0};
 
 vector<double> vec_X_C_xa = {
 	0.01, 0.55, 0.8, 0.9, 1.0, 1.06, 1.1, 1.2, 1.3, 1.4, 2.0, 2.6, 3.4, 6.0, 10.0};
@@ -57,7 +50,7 @@ vector<double> vec_Y_C_ya = {
 // Тяга - в связанной СК
 double cur_mass(vector<double> st, double t)
 {
-	return m0;
+	return inputDescr.m;
 }
 
 // Тяга - в связанной СК
@@ -100,7 +93,7 @@ double phiDeriv_t(vector<double> st, double t)
 	prevPhi = curPhi;
 
 	if (prevVal.has_value())
-		res = (curPhi - prevVal.value()) / uIntegr::inputDescr.step;
+		res = (curPhi - prevVal.value()) / inputDescr.step;
 
 	prevVal = curPhi;
 
@@ -141,7 +134,7 @@ double Vc(vector<double> st, double t)
 	prev_r = cur_r;
 
 	if (prevVal.has_value())
-		res = -1 * (cur_r - prevVal.value()) / uIntegr::inputDescr.step;
+		res = -1 * (cur_r - prevVal.value()) / inputDescr.step;
 
 	prevVal = cur_r;
 
@@ -220,7 +213,7 @@ static double betta(vector<double> st, double t)
 static double resR_xk(vector<double> st, double t)
 {
 	double res;
-	res = -C_xk(st, t) * q(st, t) * Sm;
+	res = -C_xk(st, t) * q(st, t) * inputDescr.Sm;
 	return res;
 }
 
@@ -228,7 +221,7 @@ static double resR_xk(vector<double> st, double t)
 static double resR_yk(vector<double> st, double t)
 {
 	double res;
-	res = C_yk(st, t) * q(st, t) * Sm;
+	res = C_yk(st, t) * q(st, t) * inputDescr.Sm;
 	return res;
 }
 
@@ -367,7 +360,7 @@ static double resMst_y(vector<double> st, double t)
 static double resMst_z(vector<double> st, double t)
 {
 	double res;
-	res = (-1) * (C_xk(st, t) + C_yk(st, t)) * Sm * q(st, t) * ld_lc;
+	res = (-1) * (C_xk(st, t) + C_yk(st, t)) * inputDescr.Sm * q(st, t) * inputDescr.ld_lc;
 	return res;
 }
 
@@ -457,10 +450,18 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	double phiDeriv = phiDeriv_t(st, t) * sign(Vc(st, t)); // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
-	// std::cout << "t: " << t << "\tphiDeriv: " << phiDeriv << std::endl;
+	if ((Vc(st, t) < inputDescr.Vc_min))
+	{
+		// Метод погони.
+		res = (phi_t(st, t) - st[sId(Tetta_k)]) * inputDescr.Kp;
+	}
+	else
+	{
+		// Пропорциональная навигация.
+		res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
+	}
 
-	return phiDeriv * propoN;
+	return res;
 }
 
 double Psi_k(vector<double> st, double t)
@@ -493,7 +494,7 @@ double omg_z(vector<double> st, double t)
 	// Должно быть так:
 	double resM_z_val = resMr_z(st, t);
 	double alpha_val = alpha(st, t);
-	res = resM_z_val * alpha_val / Jz;
+	res = resM_z_val * alpha_val / inputDescr.Jz;
 	return res;
 }
 
@@ -550,7 +551,7 @@ double z_i(vector<double> st, double t)
 
 double x_t(vector<double> st, double t)
 {
-	return 28.0;
+	return inputDescr.Vt;
 }
 double y_t(vector<double> st, double t)
 {
