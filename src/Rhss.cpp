@@ -63,7 +63,7 @@ double cur_mass(vector<double> st, double t)
 // Тяга - в связанной СК
 double P(vector<double> st, double t)
 {
-	return 40.0;
+	return 30.0;
 }
 
 /// @brief Угол визирования цели.
@@ -124,6 +124,39 @@ double r(vector<double> st, double t)
 	return sqrt(pow(st[sId(x_t)] - st[sId(x_i)], 2) + pow(st[sId(y_t)] - st[sId(y_i)], 2) + pow(st[sId(z_t)] - st[sId(z_i)], 2));
 }
 
+double Vc(vector<double> st, double t)
+{
+	double res = 0.0;
+	static std::optional<double> prevVal = std::nullopt;
+	static double t_prev{-1};
+	static double res_prev{-1};
+
+	if (t_prev == t)
+		return res_prev;
+
+	double cur_r = r(st, t);
+
+	static double prev_r = cur_r;
+
+	prev_r = cur_r;
+
+	if (prevVal.has_value())
+		res = -1 * (cur_r - prevVal.value()) / uIntegr::inputDescr.step;
+
+	prevVal = cur_r;
+
+	res_prev = res;
+	t_prev = t;
+	return res;
+}
+
+int sign(double val)
+{
+	if (val >= 0)
+		return 1;
+	return -1;
+}
+
 bool stopCriteria(vector<double> st, double t)
 {
 	return r(st, t) < 0.6;
@@ -134,7 +167,7 @@ static double q(vector<double> st, double t)
 {
 	double res;
 	atmosphere atm(st[sId(y_i)]);
-	res = atm._getDensityCurrent() * pow(st[sId(V_k)], 2) / 2;
+	res = 1.2255 * pow(st[sId(V_k)], 2) / 2;
 	return res;
 }
 
@@ -424,7 +457,7 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	double phiDeriv = phiDeriv_t(st, t); // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
+	double phiDeriv = phiDeriv_t(st, t) * sign(Vc(st, t)); // resF_yk(st, t) / cur_mass(st, t) / st[sId(V_k)] + res_g_yk(st, t) / st[sId(V_k)];
 	// std::cout << "t: " << t << "\tphiDeriv: " << phiDeriv << std::endl;
 
 	return phiDeriv * propoN;

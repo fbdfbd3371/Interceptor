@@ -29,7 +29,7 @@ int main()
 	inputDescr.T0 = 0;
 	inputDescr.Tk = 20;
 	inputDescr.step = 0.01;
-	inputDescr.init_conds.push_back(1);				  // V
+	inputDescr.init_conds.push_back(15);			  // V
 	inputDescr.init_conds.push_back((45) * PI / 180); // THETA
 	inputDescr.init_conds.push_back(0);				  // PSI,
 	inputDescr.init_conds.push_back(0);				  // omega_x,
@@ -69,6 +69,7 @@ int main()
 	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", true);
+	inputDescr.funcs.emplace_back(Vc, "rDeriv, m/s", true);
 
 	inputDescr.stopCriteria = stopCriteria;
 
