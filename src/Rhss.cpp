@@ -131,7 +131,7 @@ double an(vector<double> st, double t)
 
 double Vi(vector<double> st, double t)
 {
-	return  st[sId(V_k)];
+	return st[sId(V_k)];
 }
 
 double Viy(vector<double> st, double t)
@@ -139,9 +139,19 @@ double Viy(vector<double> st, double t)
 	return st[sId(V_k)] * sin(st[sId(Tetta_k)]);
 }
 
+double pitchDeg(vector<double> st, double t)
+{
+	return pitch(st, t) * 180.0 / M_PI;
+}
+
+double pitch(vector<double> st, double t)
+{
+	return st[sId(Tetta_k)];
+}
+
 double THETADeriv(vector<double> st, double t)
 {
-	double res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
+	double res = phiDeriv_t(st, t) * inputDescr.propoN;
 	if (res * st[sId(V_k)] > 42.0)
 		res = 42.0 / st[sId(V_k)];
 	else if (res * st[sId(V_k)] < -42.0)
@@ -152,7 +162,7 @@ double THETADeriv(vector<double> st, double t)
 double r(vector<double> st, double t)
 {
 	double res = sqrt(pow(st[sId(x_t)] - st[sId(x_i)], 2) + pow(st[sId(y_t)] - st[sId(y_i)], 2) + pow(st[sId(z_t)] - st[sId(z_i)], 2));
-	if(inputDescr.min_r > res)
+	if (inputDescr.min_r > res)
 		inputDescr.min_r = res;
 	return res;
 }
@@ -231,7 +241,7 @@ static double alpha(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	res = st[sId(pitch)] - st[sId(Tetta_k)]; //?????
+	res = pitch(st, t) - st[sId(Tetta_k)]; //?????
 	return res;
 }
 
@@ -486,6 +496,7 @@ double V_k(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так: resF_xk()/st[sId(сmass)]+res_g_xk
+
 	res = resF_xk(st, t) / cur_mass(st, t) + res_g_xk(st, t);
 	return res;
 }
@@ -494,7 +505,7 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Пропорциональная навигация.
-	if ((st[sId(y_i)] < 5.0) || (st[sId(Tetta_k)] < 5.0 * M_PI / 180.0) || (st[sId(Tetta_k)] > 175.0 * M_PI / 180.0))
+	if ((st[sId(y_i)] < 5.0) && ((st[sId(Tetta_k)] < 5.0 * M_PI / 180.0) || (st[sId(Tetta_k)] > 175.0 * M_PI / 180.0)))
 		res = 0.0;
 	else
 		res = THETADeriv(st, t);
@@ -536,21 +547,12 @@ double omg_z(vector<double> st, double t)
 	return res;
 }
 
-double pitch(vector<double> st, double t)
-{
-	double res;
-	double gamma = 0;
-	// Должно быть так:
-	res = st[sId(omg_y)] * sin(gamma) + st[sId(omg_z)] * cos(gamma);
-	return res;
-}
-
 double yaw(vector<double> st, double t)
 {
 	double res;
 	double gamma = 0;
 	// Должно быть так:
-	res = (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma)) / cos(st[sId(pitch)]);
+	res = (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma)) / cos(pitch(st, t));
 	return res;
 }
 
@@ -559,7 +561,7 @@ double roll(vector<double> st, double t)
 	double res;
 	double gamma = 0;
 	// Должно быть так:
-	res = st[sId(omg_x)] - tan(st[sId(pitch)]) * (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
+	res = st[sId(omg_x)] - tan(pitch(st, t)) * (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
 	return res;
 }
 

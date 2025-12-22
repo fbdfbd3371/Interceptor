@@ -11,7 +11,7 @@ int main()
 
 	double Vi0{1.0};
 	double xt0{-250};
-	inputDescr.propoN = 20.0;
+	inputDescr.propoN = 80.0;
 
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -19,7 +19,6 @@ int main()
 	inputDescr.rhss.push_back(omg_x);
 	inputDescr.rhss.push_back(omg_y);
 	inputDescr.rhss.push_back(omg_z);
-	inputDescr.rhss.push_back(pitch);
 	inputDescr.rhss.push_back(yaw);
 	inputDescr.rhss.push_back(roll);
 	inputDescr.rhss.push_back(x_i);
@@ -30,7 +29,7 @@ int main()
 	inputDescr.rhss.push_back(z_t);
 
 	inputDescr.T0 = 0;
-	inputDescr.Tk = 20;
+	inputDescr.Tk = 40;
 	inputDescr.step = 0.01;
 	inputDescr.init_conds.push_back(Vi0);			  // V
 	inputDescr.init_conds.push_back((45) * PI / 180); // THETA
@@ -38,7 +37,6 @@ int main()
 	inputDescr.init_conds.push_back(0);				  // omega_x,
 	inputDescr.init_conds.push_back(0);				  // omega_y,
 	inputDescr.init_conds.push_back(0);				  // omega_z,
-	inputDescr.init_conds.push_back((39) * PI / 180); // pitch
 	inputDescr.init_conds.push_back(0);				  // yaw
 	inputDescr.init_conds.push_back(0);				  // roll
 	inputDescr.init_conds.push_back(0);				  // x_i
@@ -54,7 +52,6 @@ int main()
 	inputDescr.prm_names.push_back(std::pair("omega_x, rad/s", false));
 	inputDescr.prm_names.push_back(std::pair("omega_y, rad/s", false));
 	inputDescr.prm_names.push_back(std::pair("omega_z, rad/s", false));
-	inputDescr.prm_names.push_back(std::pair("pitch, rad", false));
 	inputDescr.prm_names.push_back(std::pair("yaw, rad", false));
 	inputDescr.prm_names.push_back(std::pair("roll, rad", false));
 	inputDescr.prm_names.push_back(std::pair("x_i, m", true));
@@ -77,6 +74,8 @@ int main()
 	inputDescr.funcs.emplace_back(an, "a_n, m/s^2", true);
 	inputDescr.funcs.emplace_back(Vi, "Vi, m/s", true);
 	inputDescr.funcs.emplace_back(Viy, "Viy, m/s", true);
+	inputDescr.funcs.emplace_back(Viy, "pitch,deg", true);
+	
 
 	inputDescr.stopCriteriaVector.clear();
 	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
@@ -98,10 +97,10 @@ int main()
 
 	std::cout << "Processing starts!" << std::endl;
 
-	solve_system(inputDescr);
+	// solve_system(inputDescr);
 
 	double phiStep = 0.1 * M_PI / 180.0;
-	double startPhi = 5.0 * M_PI / 180.0;
+	double startPhi = 50.0 * M_PI / 180.0;
 	double endPhi = 170.0 * M_PI / 180.0;
 
 	/// Максимальная дальность обнаружения.
@@ -119,7 +118,6 @@ int main()
 		inputDescr.init_conds.push_back(0.0);				 // omega_x,
 		inputDescr.init_conds.push_back(0.0);				 // omega_y,
 		inputDescr.init_conds.push_back(0.0);				 // omega_z,
-		inputDescr.init_conds.push_back(curPhi);			 // pitch
 		inputDescr.init_conds.push_back(0.0);				 // yaw
 		inputDescr.init_conds.push_back(0.0);				 // roll
 		inputDescr.init_conds.push_back(0.0);				 // x_i
