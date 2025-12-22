@@ -12,6 +12,11 @@ bool idleStopCriteria(vector<double>, double)
 
 bool solve_system(inputDescr_t prm)
 {
+	bool isSuccess{true};
+
+	if (!outFile.is_open())
+		outFile.open("results/phi_" + std::to_string(inputDescr.init_conds[1] * 180.0 / M_PI) + ".txt");
+
 	outFile << "t, sec" << "\t";
 	for (auto el : prm.prm_names)
 		if (el.second)
@@ -111,10 +116,15 @@ bool solve_system(inputDescr_t prm)
 
 		for (auto el : prm.stopCriteriaVector)
 		{
-			auto res = el(cur_params, t + prm.step);
-			if (res.has_value())
-				return res.value();
+			if (el(cur_params, t + prm.step))
+			{
+				outFile.close();
+				return true * isSuccess;
+			}
 		}
+
+		for (auto el : prm.successCriteriaVector)
+			isSuccess *= el(cur_params, t + prm.step);
 	}
 
 	outFile.close();

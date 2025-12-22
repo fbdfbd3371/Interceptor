@@ -18,9 +18,9 @@ double r(vector<double> st, double t);
 double Vc(vector<double> st, double t);
 
 /// @brief  Критерий останова по величине промаха.
-std::optional<bool> missStopCriteria(vector<double> st, double t);
+bool missStopCriteria(vector<double> st, double t);
 /// @brief Критерий останова по высоте перехватчика.
-std::optional<bool> altStopCriteria(vector<double> st, double t);
+bool altStopCriteria(vector<double> st, double t);
 
 enum class sId_t
 {

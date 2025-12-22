@@ -25,7 +25,9 @@ struct inputDescr_t
 	double step;
 	vector<std::pair<string, bool>> prm_names;
 	string integr_param_name;
-	std::vector<function<std::optional<bool>(vector<double>, double)>> stopCriteriaVector{function(idleStopCriteria)};
+
+	std::vector<function<bool(vector<double>, double)>> stopCriteriaVector{function(idleStopCriteria)};
+	std::vector<function<bool(vector<double>, double)>> successCriteriaVector{function(idleStopCriteria)};
 
 	double propoN{80.0};
 	double Vt{48.0};

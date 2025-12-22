@@ -11,6 +11,7 @@ int main()
 
 	double Vi0{15.0};
 	double xt0{-250};
+	inputDescr.propoN = 50.0;
 
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -71,14 +72,16 @@ int main()
 	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", false);
 	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
-	inputDescr.funcs.emplace_back(r, "r, m", false);
+	inputDescr.funcs.emplace_back(r, "r, m", true);
 	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
 
 	inputDescr.stopCriteriaVector.clear();
 	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
-	inputDescr.stopCriteriaVector.emplace_back(altStopCriteria);
 
-	outFile.open("output.txt");
+	inputDescr.successCriteriaVector.clear();
+	inputDescr.successCriteriaVector.emplace_back(altStopCriteria);
+
+	// outFile.open("output.txt");
 	// outFile << "propoN, [-]\t" << inputDescr.propoN << std::endl;
 	// outFile << "Vi0, [m/s]\t" << Vi0 << std::endl;
 	// outFile << "Vt, [m/s]\t" << inputDescr.Vt << std::endl;

@@ -155,20 +155,20 @@ int sign(double val)
 	return -1;
 }
 
-std::optional<bool> missStopCriteria(vector<double> st, double t)
+bool missStopCriteria(vector<double> st, double t)
 {
 	if (r(st, t) < 0.6)
 		return true;
 
-	return std::nullopt;
+	return false;
 }
 
-std::optional<bool> altStopCriteria(vector<double> st, double t)
+bool altStopCriteria(vector<double> st, double t)
 {
-	// std::cerr << st[sId(y_i)] << std::endl;
 	if (st[sId(y_i)] < 0.0)
 		return false;
-	return std::nullopt;
+	else
+		return true;
 }
 
 // Скоростной напор
@@ -466,7 +466,10 @@ double Tetta_k(vector<double> st, double t)
 {
 	double res;
 	// Пропорциональная навигация.
-	res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
+	if ((st[sId(y_i)] < 5.0) || (st[sId(Tetta_k)] < 5.0 * M_PI / 180.0) || (st[sId(Tetta_k)] > 175.0 * M_PI / 180.0))
+		res = 0.0;
+	else
+		res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
 
 	return res;
 }
