@@ -40,12 +40,12 @@ int main()
 	inputDescr.init_conds.push_back((39) * PI / 180); // pitch
 	inputDescr.init_conds.push_back(0);				  // yaw
 	inputDescr.init_conds.push_back(0);				  // roll
-	inputDescr.init_conds.push_back(0);				  // x
-	inputDescr.init_conds.push_back(2);				  // y,
-	inputDescr.init_conds.push_back(0);				  // z
-	inputDescr.init_conds.push_back(xt0);			  // x_c
-	inputDescr.init_conds.push_back(250);			  // y_c
-	inputDescr.init_conds.push_back(0);				  // z_c
+	inputDescr.init_conds.push_back(0);				  // x_i
+	inputDescr.init_conds.push_back(2);				  // y_i
+	inputDescr.init_conds.push_back(0);				  // z_i
+	inputDescr.init_conds.push_back(xt0);			  // x_t
+	inputDescr.init_conds.push_back(250);			  // y_t
+	inputDescr.init_conds.push_back(0);				  // z_t
 
 	inputDescr.prm_names.push_back(std::pair("V, m/s", false));
 	inputDescr.prm_names.push_back(std::pair("THETA, rad", false));
@@ -67,13 +67,16 @@ int main()
 	inputDescr.funcs.emplace_back(cur_mass, "m, kg", false);
 	inputDescr.funcs.emplace_back(P, "P, N", false);
 	inputDescr.funcs.emplace_back(phi_t, "phi_t, rad", false);
+	inputDescr.funcs.emplace_back(phiDeg, "phi, deg", true);
 	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", false);
-	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", false);
-	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", false);
+	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
+	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", false);
-	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", false);
+	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
 
-	inputDescr.stopCriteria = stopCriteria;
+	inputDescr.stopCriteriaVector.clear();
+	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
+	inputDescr.stopCriteriaVector.emplace_back(altStopCriteria);
 
 	outFile.open("output.txt");
 	// outFile << "propoN, [-]\t" << inputDescr.propoN << std::endl;
@@ -90,6 +93,41 @@ int main()
 	std::cout << "Processing starts!" << std::endl;
 
 	solve_system(inputDescr);
+
+	double phiStep = 0.1 * M_PI / 180.0;
+	double startPhi = 5.0 * M_PI / 180.0;
+	double endPhi = 170.0 * M_PI / 180.0;
+
+	/// Максимальная дальность обнаружения.
+	double rMax = 200.0;
+	/// Горизонтальная скорость цели.
+	inputDescr.Vt = -10.0;
+
+	for (double curPhi = startPhi; curPhi <= endPhi; curPhi += phiStep)
+	{
+		std::cerr << "curPhi: " << curPhi * 180.0 / M_PI << '\t';
+		inputDescr.init_conds.clear();
+		inputDescr.init_conds.push_back(Vi0);				 // V
+		inputDescr.init_conds.push_back(curPhi);			 // THETA
+		inputDescr.init_conds.push_back(0.0);				 // PSI,
+		inputDescr.init_conds.push_back(0.0);				 // omega_x,
+		inputDescr.init_conds.push_back(0.0);				 // omega_y,
+		inputDescr.init_conds.push_back(0.0);				 // omega_z,
+		inputDescr.init_conds.push_back(curPhi);			 // pitch
+		inputDescr.init_conds.push_back(0.0);				 // yaw
+		inputDescr.init_conds.push_back(0.0);				 // roll
+		inputDescr.init_conds.push_back(0.0);				 // x_i
+		inputDescr.init_conds.push_back(0.0);				 // y_i
+		inputDescr.init_conds.push_back(0.0);				 // z_i
+		inputDescr.init_conds.push_back(rMax * cos(curPhi)); // x_t
+		inputDescr.init_conds.push_back(rMax * sin(curPhi)); // y_t
+		inputDescr.init_conds.push_back(0.0);				 // z_t
+
+		if (solve_system(inputDescr))
+			std::cerr << "Success!" << std::endl;
+		else
+			std::cerr << "Unsuccess..." << std::endl;
+	}
 
 	std::cout << "Processing done!" << std::endl;
 	return 0;

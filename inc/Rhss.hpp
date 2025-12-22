@@ -8,6 +8,7 @@ using namespace std;
 double cur_mass(vector<double> st, double t);
 double P(vector<double> st, double t);
 double phi_t(vector<double> st, double t);
+double phiDeg(vector<double> st, double t);
 double phiDeriv_t(vector<double> st, double t);
 double phiDerivDeg(vector<double> st, double t);
 double THETADeg(vector<double> st, double t);
@@ -17,7 +18,9 @@ double r(vector<double> st, double t);
 double Vc(vector<double> st, double t);
 
 /// @brief  Критерий останова по величине промаха.
-bool stopCriteria(vector<double> st, double t);
+std::optional<bool> missStopCriteria(vector<double> st, double t);
+/// @brief Критерий останова по высоте перехватчика.
+std::optional<bool> altStopCriteria(vector<double> st, double t);
 
 enum class sId_t
 {

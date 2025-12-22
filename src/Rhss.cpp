@@ -65,6 +65,11 @@ double phi_t(vector<double> st, double t)
 	return atan2((st[sId(y_t)] - st[sId(y_i)]), (st[sId(x_t)] - st[sId(x_i)]));
 }
 
+double phiDeg(vector<double> st, double t)
+{
+	return phi_t(st, t) * 180.0 / M_PI;
+}
+
 double phiDeriv_t(vector<double> st, double t)
 {
 	double res = 0.0;
@@ -150,9 +155,20 @@ int sign(double val)
 	return -1;
 }
 
-bool stopCriteria(vector<double> st, double t)
+std::optional<bool> missStopCriteria(vector<double> st, double t)
 {
-	return r(st, t) < 0.6;
+	if (r(st, t) < 0.6)
+		return true;
+
+	return std::nullopt;
+}
+
+std::optional<bool> altStopCriteria(vector<double> st, double t)
+{
+	// std::cerr << st[sId(y_i)] << std::endl;
+	if (st[sId(y_i)] < 0.0)
+		return false;
+	return std::nullopt;
 }
 
 // Скоростной напор
@@ -449,17 +465,8 @@ double V_k(vector<double> st, double t)
 double Tetta_k(vector<double> st, double t)
 {
 	double res;
-	// Должно быть так:
-	if ((Vc(st, t) < inputDescr.Vc_min))
-	{
-		// Метод погони.
-		res = (phi_t(st, t) - st[sId(Tetta_k)]) * inputDescr.Kp;
-	}
-	else
-	{
-		// Пропорциональная навигация.
-		res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
-	}
+	// Пропорциональная навигация.
+	res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
 
 	return res;
 }

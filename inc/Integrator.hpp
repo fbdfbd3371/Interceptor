@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <fstream>
+#include <optional>
 #include <atmos.hpp>
 
 struct inputDescr_t;
@@ -24,10 +25,10 @@ struct inputDescr_t
 	double step;
 	vector<std::pair<string, bool>> prm_names;
 	string integr_param_name;
-	function<bool(vector<double>, double)> stopCriteria = function(idleStopCriteria);
+	std::vector<function<std::optional<bool>(vector<double>, double)>> stopCriteriaVector{function(idleStopCriteria)};
 
 	double propoN{80.0};
-	double Vt{30.0};
+	double Vt{48.0};
 	double m = 2;
 	double Jx = 0;
 	double Jy = 0;
@@ -38,4 +39,4 @@ struct inputDescr_t
 	double Kp{20};
 };
 
-map<string, vector<double>> solve_system(inputDescr_t prm);
+bool solve_system(inputDescr_t prm);

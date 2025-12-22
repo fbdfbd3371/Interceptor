@@ -10,7 +10,7 @@ bool idleStopCriteria(vector<double>, double)
 	return false;
 }
 
-map<string, vector<double>> solve_system(inputDescr_t prm)
+bool solve_system(inputDescr_t prm)
 {
 	outFile << "t, sec" << "\t";
 	for (auto el : prm.prm_names)
@@ -109,13 +109,14 @@ map<string, vector<double>> solve_system(inputDescr_t prm)
 
 		allParams[prm.integr_param_name].push_back(t);
 
-		if (prm.stopCriteria(cur_params, t + prm.step))
+		for (auto el : prm.stopCriteriaVector)
 		{
-			std::cout << "Integrating stopped by stop criteria!" << std::endl;
-			break;
+			auto res = el(cur_params, t + prm.step);
+			if (res.has_value())
+				return res.value();
 		}
 	}
 
 	outFile.close();
-	return allParams;
+	return false;
 }
