@@ -9,9 +9,9 @@ int main()
 {
 	feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
 
-	double Vi0{15.0};
+	double Vi0{1.0};
 	double xt0{-250};
-	inputDescr.propoN = 50.0;
+	inputDescr.propoN = 20.0;
 
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -74,6 +74,9 @@ int main()
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", true);
 	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
+	inputDescr.funcs.emplace_back(an, "a_n, m/s^2", true);
+	inputDescr.funcs.emplace_back(Vi, "Vi, m/s", true);
+	inputDescr.funcs.emplace_back(Viy, "Viy, m/s", true);
 
 	inputDescr.stopCriteriaVector.clear();
 	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
@@ -104,7 +107,7 @@ int main()
 	/// Максимальная дальность обнаружения.
 	double rMax = 200.0;
 	/// Горизонтальная скорость цели.
-	inputDescr.Vt = -10.0;
+	inputDescr.Vt = -30.0;
 
 	for (double curPhi = startPhi; curPhi <= endPhi; curPhi += phiStep)
 	{
@@ -126,10 +129,12 @@ int main()
 		inputDescr.init_conds.push_back(rMax * sin(curPhi)); // y_t
 		inputDescr.init_conds.push_back(0.0);				 // z_t
 
+		inputDescr.min_r = 1e+5;
+
 		if (solve_system(inputDescr))
 			std::cerr << "Success!" << std::endl;
 		else
-			std::cerr << "Unsuccess..." << std::endl;
+			std::cerr << "Unsuccess...\tr: " << inputDescr.min_r << std::endl;
 	}
 
 	std::cout << "Processing done!" << std::endl;

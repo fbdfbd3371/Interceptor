@@ -39,6 +39,8 @@ struct inputDescr_t
 	double Sm = 0.017289;
 	double Vc_min{10};
 	double Kp{20};
+
+	double min_r{1e+5};
 };
 
 bool solve_system(inputDescr_t prm);

@@ -70,6 +70,13 @@ double phiDeg(vector<double> st, double t)
 	return phi_t(st, t) * 180.0 / M_PI;
 }
 
+int sign(double val)
+{
+	if (val >= 0)
+		return 1;
+	return -1;
+}
+
 double phiDeriv_t(vector<double> st, double t)
 {
 	double res = 0.0;
@@ -117,9 +124,37 @@ double THETADeg(vector<double> st, double t)
 	return st[sId(Tetta_k)] * 180.0 / M_PI;
 }
 
+double an(vector<double> st, double t)
+{
+	return THETADeriv(st, t) * st[sId(V_k)];
+}
+
+double Vi(vector<double> st, double t)
+{
+	return  st[sId(V_k)];
+}
+
+double Viy(vector<double> st, double t)
+{
+	return st[sId(V_k)] * sin(st[sId(Tetta_k)]);
+}
+
+double THETADeriv(vector<double> st, double t)
+{
+	double res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
+	if (res * st[sId(V_k)] > 42.0)
+		res = 42.0 / st[sId(V_k)];
+	else if (res * st[sId(V_k)] < -42.0)
+		res = -42.0 / st[sId(V_k)];
+	return res;
+}
+
 double r(vector<double> st, double t)
 {
-	return sqrt(pow(st[sId(x_t)] - st[sId(x_i)], 2) + pow(st[sId(y_t)] - st[sId(y_i)], 2) + pow(st[sId(z_t)] - st[sId(z_i)], 2));
+	double res = sqrt(pow(st[sId(x_t)] - st[sId(x_i)], 2) + pow(st[sId(y_t)] - st[sId(y_i)], 2) + pow(st[sId(z_t)] - st[sId(z_i)], 2));
+	if(inputDescr.min_r > res)
+		inputDescr.min_r = res;
+	return res;
 }
 
 double Vc(vector<double> st, double t)
@@ -146,13 +181,6 @@ double Vc(vector<double> st, double t)
 	res_prev = res;
 	t_prev = t;
 	return res;
-}
-
-int sign(double val)
-{
-	if (val >= 0)
-		return 1;
-	return -1;
 }
 
 bool missStopCriteria(vector<double> st, double t)
@@ -469,7 +497,7 @@ double Tetta_k(vector<double> st, double t)
 	if ((st[sId(y_i)] < 5.0) || (st[sId(Tetta_k)] < 5.0 * M_PI / 180.0) || (st[sId(Tetta_k)] > 175.0 * M_PI / 180.0))
 		res = 0.0;
 	else
-		res = phiDeriv_t(st, t) * sign(Vc(st, t)) * inputDescr.propoN;
+		res = THETADeriv(st, t);
 
 	return res;
 }
@@ -545,10 +573,7 @@ double x_i(vector<double> st, double t)
 
 double y_i(vector<double> st, double t)
 {
-	double res;
-	// Должно быть так:
-	res = st[sId(V_k)] * sin(st[sId(Tetta_k)]);
-	return res;
+	return Viy(st, t);
 }
 
 double z_i(vector<double> st, double t)
