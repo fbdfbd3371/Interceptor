@@ -119,7 +119,8 @@ bool solve_system(inputDescr_t prm)
 			if (el(cur_params, t + prm.step))
 			{
 				outFile.close();
-				return true * isSuccess;
+				//std::cerr << "is Success: " << isSuccess << std::endl;
+				return true;// * isSuccess;
 			}
 		}
 

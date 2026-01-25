@@ -7,11 +7,11 @@
 
 int main()
 {
-	feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
+	// feenableexcept(FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
 
-	double Vi0{1.0};
+	double Vi0{10.0};
 	double xt0{-250};
-	inputDescr.propoN = 80.0;
+	inputDescr.propoN = 20.0;
 
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -71,11 +71,12 @@ int main()
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", true);
 	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
+	inputDescr.funcs.emplace_back(ac, "ac, m/s^2", true);
 	inputDescr.funcs.emplace_back(an, "a_n, m/s^2", true);
 	inputDescr.funcs.emplace_back(Vi, "Vi, m/s", true);
 	inputDescr.funcs.emplace_back(Viy, "Viy, m/s", true);
-	inputDescr.funcs.emplace_back(Viy, "pitch,deg", true);
-	
+	inputDescr.funcs.emplace_back(pitchDeg, "pitch,deg", true);
+	inputDescr.funcs.emplace_back(THETADerivDeg, "THETADerivDeg,deg", true);
 
 	inputDescr.stopCriteriaVector.clear();
 	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
@@ -100,13 +101,16 @@ int main()
 	// solve_system(inputDescr);
 
 	double phiStep = 0.1 * M_PI / 180.0;
-	double startPhi = 50.0 * M_PI / 180.0;
+	double startPhi = 10.0 * M_PI / 180.0;
 	double endPhi = 170.0 * M_PI / 180.0;
 
 	/// Максимальная дальность обнаружения.
 	double rMax = 200.0;
 	/// Горизонтальная скорость цели.
-	inputDescr.Vt = -30.0;
+	inputDescr.Vt = -40.0;
+
+	std::ofstream zoneFile;
+	zoneFile.open("zone.txt");
 
 	for (double curPhi = startPhi; curPhi <= endPhi; curPhi += phiStep)
 	{
@@ -130,11 +134,18 @@ int main()
 		inputDescr.min_r = 1e+5;
 
 		if (solve_system(inputDescr))
+		{
 			std::cerr << "Success!" << std::endl;
+			zoneFile << curPhi << '\t' << true << std::endl;
+		}
 		else
+		{
 			std::cerr << "Unsuccess...\tr: " << inputDescr.min_r << std::endl;
+			zoneFile << curPhi << '\t' << false << std::endl;
+		}
 	}
 
 	std::cout << "Processing done!" << std::endl;
+	zoneFile.close();
 	return 0;
 }

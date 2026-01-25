@@ -10,6 +10,7 @@ double P(vector<double> st, double t);
 double phi_t(vector<double> st, double t);
 double phiDeg(vector<double> st, double t);
 double phiDeriv_t(vector<double> st, double t);
+double ac(vector<double> st, double t);
 double phiDerivDeg(vector<double> st, double t);
 double THETADeg(vector<double> st, double t);
 double an(vector<double> st, double t);
@@ -19,6 +20,7 @@ double pitchDeg(vector<double> st, double t);
 double pitch(vector<double> st, double t);
 
 double THETADeriv(vector<double> st, double t);
+double THETADerivDeg(vector<double> st, double t);
 // Расстояние между перехватчиком и целью, [м].
 double r(vector<double> st, double t);
 // Скорость сближения

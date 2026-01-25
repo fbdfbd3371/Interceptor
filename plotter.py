@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ===== НАСТРОЙКИ =====
-filePath = "results/phi_170.000000.txt"    # файл с данными
-losStep = 1.0            # шаг линий визирования, сек
+filePath = "results/phi_60.500000.txt"    # файл с данными
+losStep = 0.3            # шаг линий визирования, сек
 # =====================
 
 # Чтение файла (табуляция)

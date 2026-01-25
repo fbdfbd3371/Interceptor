@@ -36,7 +36,7 @@ struct inputDescr_t
 	double Jy = 0;
 	double Jz = 0.2;
 	double ld_lc = 0.21;
-	double Sm = 0.017289;
+	double Sm = 0.077289;
 	double Vc_min{10};
 	double Kp{20};
 

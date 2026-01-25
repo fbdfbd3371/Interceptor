@@ -62,7 +62,9 @@ double P(vector<double> st, double t)
 /// @brief Угол визирования цели.
 double phi_t(vector<double> st, double t)
 {
-	return atan2((st[sId(y_t)] - st[sId(y_i)]), (st[sId(x_t)] - st[sId(x_i)]));
+	double x_t_mock = st[sId(x_t)]; // - r(st, t);
+	double y_t_mock = st[sId(y_t)]; // - r(st, t);
+	return atan2((y_t_mock - st[sId(y_i)]), (x_t_mock - st[sId(x_i)]));
 }
 
 double phiDeg(vector<double> st, double t)
@@ -114,6 +116,30 @@ double phiDeriv_t(vector<double> st, double t)
 	return res;
 }
 
+double ac(vector<double> st, double t)
+{
+	double res = 0.0;
+	static std::optional<double> prevVal = std::nullopt;
+	static double t_prev{-1};
+	static double res_prev{-1};
+
+	if (t_prev == t)
+		return res_prev;
+
+	double curVc = Vc(st, t);
+
+	static double prevVc = curVc;
+
+	if (prevVal.has_value())
+		res = (curVc - prevVal.value()) / inputDescr.step;
+
+	prevVal = curVc;
+
+	res_prev = res;
+	t_prev = t;
+	return res;
+}
+
 double phiDerivDeg(vector<double> st, double t)
 {
 	return phiDeriv_t(st, t) * 180.0 / M_PI;
@@ -151,12 +177,32 @@ double pitch(vector<double> st, double t)
 
 double THETADeriv(vector<double> st, double t)
 {
-	double res = phiDeriv_t(st, t) * inputDescr.propoN;
-	if (res * st[sId(V_k)] > 42.0)
-		res = 42.0 / st[sId(V_k)];
-	else if (res * st[sId(V_k)] < -42.0)
-		res = -42.0 / st[sId(V_k)];
+	double res;
+	if (t < 1.0)
+		res = 0.0; // / st[sId(V_k)];
+	else if (t < 5.0)
+		res = phiDeriv_t(st, t) * inputDescr.propoN * sign(-ac(st, t)) * sign(Vc(st, t)); // / st[sId(V_k)];
+	else
+		res = phiDeriv_t(st, t) * inputDescr.propoN; //  * Vc(st, t) / st[sId(V_k)];
+	// if (res * st[sId(V_k)] > 42.0)
+	// 	res = 42.0 / st[sId(V_k)];
+	// else if (res * st[sId(V_k)] < -42.0)
+	// 	res = -42.0 / st[sId(V_k)];
+
+	// if ((st[sId(y_i)] < 2.0) && ((st[sId(Tetta_k)] < 10 * M_PI / 180.0) || (st[sId(Tetta_k)] > 170.0 * M_PI / 180.0)))
+	// 	res = 0.0;
+
+	// if (Vc(st, t) < 0)
+	// {
+	// 	res = 3.0 * (st[sId(Tetta_k)] - phi_t(st, t));
+	// }
+
 	return res;
+}
+
+double THETADerivDeg(vector<double> st, double t)
+{
+	return THETADeriv(st, t) * 180.0 / M_PI;
 }
 
 double r(vector<double> st, double t)
@@ -195,7 +241,7 @@ double Vc(vector<double> st, double t)
 
 bool missStopCriteria(vector<double> st, double t)
 {
-	if (r(st, t) < 0.6)
+	if (r(st, t) < 3.0)
 		return true;
 
 	return false;
@@ -204,7 +250,10 @@ bool missStopCriteria(vector<double> st, double t)
 bool altStopCriteria(vector<double> st, double t)
 {
 	if (st[sId(y_i)] < 0.0)
+	{
+		// std::cerr << "alt: " << st[sId(y_i)] << std::endl;
 		return false;
+	}
 	else
 		return true;
 }
@@ -503,14 +552,7 @@ double V_k(vector<double> st, double t)
 
 double Tetta_k(vector<double> st, double t)
 {
-	double res;
-	// Пропорциональная навигация.
-	if ((st[sId(y_i)] < 5.0) && ((st[sId(Tetta_k)] < 5.0 * M_PI / 180.0) || (st[sId(Tetta_k)] > 175.0 * M_PI / 180.0)))
-		res = 0.0;
-	else
-		res = THETADeriv(st, t);
-
-	return res;
+	return THETADeriv(st, t);
 }
 
 double Psi_k(vector<double> st, double t)
