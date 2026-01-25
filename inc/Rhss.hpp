@@ -9,13 +9,16 @@ double cur_mass(vector<double> st, double t);
 double P(vector<double> st, double t);
 double phi_t(vector<double> st, double t);
 double phiDeg(vector<double> st, double t);
-double phiDeriv_t(vector<double> st, double t);
+double phiDerivNew(vector<double> st, double t);
 double ac(vector<double> st, double t);
-double phiDerivDeg(vector<double> st, double t);
+double phiDerivNewDeg(vector<double> st, double t);
 double THETADeg(vector<double> st, double t);
 double an(vector<double> st, double t);
 double Vi(vector<double> st, double t);
 double Viy(vector<double> st, double t);
+double Vix(vector<double> st, double t);
+double Vtx(vector<double> st, double t);
+double Vty(vector<double> st, double t);
 double pitchDeg(vector<double> st, double t);
 double pitch(vector<double> st, double t);
 

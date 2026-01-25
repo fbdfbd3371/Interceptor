@@ -30,7 +30,10 @@ struct inputDescr_t
 	std::vector<function<bool(vector<double>, double)>> successCriteriaVector{function(idleStopCriteria)};
 
 	double propoN{80.0};
-	double Vt{48.0};
+	/// @brief Скорость цели в проекции на Ox.
+	double Vtx{48.0};
+	/// @brief Скорость цели в проекции на Oy.
+	double Vty{0.0};
 	double m = 2;
 	double Jx = 0;
 	double Jy = 0;

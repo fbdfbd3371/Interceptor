@@ -66,8 +66,6 @@ int main()
 	inputDescr.funcs.emplace_back(P, "P, N", false);
 	inputDescr.funcs.emplace_back(phi_t, "phi_t, rad", false);
 	inputDescr.funcs.emplace_back(phiDeg, "phi, deg", true);
-	inputDescr.funcs.emplace_back(phiDeriv_t, "phiDeriv_t, rad/s", false);
-	inputDescr.funcs.emplace_back(phiDerivDeg, "phiDerivDeg, deg/s", true);
 	inputDescr.funcs.emplace_back(THETADeg, "THETADeg, deg", true);
 	inputDescr.funcs.emplace_back(r, "r, m", true);
 	inputDescr.funcs.emplace_back(Vc, "Vc, m/s", true);
@@ -77,6 +75,7 @@ int main()
 	inputDescr.funcs.emplace_back(Viy, "Viy, m/s", true);
 	inputDescr.funcs.emplace_back(pitchDeg, "pitch,deg", true);
 	inputDescr.funcs.emplace_back(THETADerivDeg, "THETADerivDeg,deg", true);
+	inputDescr.funcs.emplace_back(phiDerivNewDeg, "phiDerivNewDeg", true);
 
 	inputDescr.stopCriteriaVector.clear();
 	inputDescr.stopCriteriaVector.emplace_back(missStopCriteria);
@@ -100,14 +99,14 @@ int main()
 
 	// solve_system(inputDescr);
 
-	double phiStep = 0.1 * M_PI / 180.0;
+	double phiStep = 10.0 * M_PI / 180.0;
 	double startPhi = 10.0 * M_PI / 180.0;
 	double endPhi = 170.0 * M_PI / 180.0;
 
 	/// Максимальная дальность обнаружения.
 	double rMax = 200.0;
 	/// Горизонтальная скорость цели.
-	inputDescr.Vt = -40.0;
+	inputDescr.Vtx = -40.0;
 
 	std::ofstream zoneFile;
 	zoneFile.open("zone.txt");

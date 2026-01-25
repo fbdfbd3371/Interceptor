@@ -79,41 +79,14 @@ int sign(double val)
 	return -1;
 }
 
-double phiDeriv_t(vector<double> st, double t)
+double phiDerivNew(vector<double> st, double t)
 {
-	double res = 0.0;
-	static std::optional<double> prevVal = std::nullopt;
-	static double t_prev{-1};
-	static double res_prev{-1};
+	double X = st[sId(x_t)] - st[sId(x_i)];
+	double Y = st[sId(y_t)] - st[sId(y_i)];
+	double V_X = Vtx(st, t) - Vix(st, t);
+	double V_Y = Vty(st, t) - Viy(st, t);
 
-	if (t_prev == t)
-		return res_prev;
-
-	double curPhi = phi_t(st, t);
-
-	static double prevPhi = curPhi;
-
-	for (;;)
-	{
-		double d = curPhi - prevPhi;
-		if (d > M_PI)
-			curPhi -= 2 * M_PI;
-		else if (d < -M_PI)
-			curPhi += 2 * M_PI;
-		else
-			break;
-	}
-
-	prevPhi = curPhi;
-
-	if (prevVal.has_value())
-		res = (curPhi - prevVal.value()) / inputDescr.step;
-
-	prevVal = curPhi;
-
-	res_prev = res;
-	t_prev = t;
-	return res;
+	return (X * V_Y - Y * V_X) / (X * X + Y * Y);
 }
 
 double ac(vector<double> st, double t)
@@ -140,9 +113,9 @@ double ac(vector<double> st, double t)
 	return res;
 }
 
-double phiDerivDeg(vector<double> st, double t)
+double phiDerivNewDeg(vector<double> st, double t)
 {
-	return phiDeriv_t(st, t) * 180.0 / M_PI;
+	return phiDerivNew(st, t) * 180.0 / M_PI;
 }
 
 double THETADeg(vector<double> st, double t)
@@ -165,6 +138,20 @@ double Viy(vector<double> st, double t)
 	return st[sId(V_k)] * sin(st[sId(Tetta_k)]);
 }
 
+double Vix(vector<double> st, double t)
+{
+	return st[sId(V_k)] * cos(st[sId(Tetta_k)]);
+}
+
+double Vtx(vector<double> st, double t)
+{
+	return inputDescr.Vtx;
+}
+double Vty(vector<double> st, double t)
+{
+	return inputDescr.Vty;
+}
+
 double pitchDeg(vector<double> st, double t)
 {
 	return pitch(st, t) * 180.0 / M_PI;
@@ -178,12 +165,13 @@ double pitch(vector<double> st, double t)
 double THETADeriv(vector<double> st, double t)
 {
 	double res;
-	if (t < 1.0)
-		res = 0.0; // / st[sId(V_k)];
-	else if (t < 5.0)
-		res = phiDeriv_t(st, t) * inputDescr.propoN * sign(-ac(st, t)) * sign(Vc(st, t)); // / st[sId(V_k)];
-	else
-		res = phiDeriv_t(st, t) * inputDescr.propoN; //  * Vc(st, t) / st[sId(V_k)];
+
+	// else if (t < 5.0)
+	// 	res = phiDeriv_t(st, t) * inputDescr.propoN * sign(-ac(st, t)) * sign(Vc(st, t)); // / st[sId(V_k)];
+	// if ( st[sId(y_i)] < 5.0)
+	// 	res = 0.0; // / st[sId(V_k)];
+	// else
+	res = phiDerivNew(st, t) * inputDescr.propoN; //  * Vc(st, t) / st[sId(V_k)];
 	// if (res * st[sId(V_k)] > 42.0)
 	// 	res = 42.0 / st[sId(V_k)];
 	// else if (res * st[sId(V_k)] < -42.0)
@@ -630,11 +618,11 @@ double z_i(vector<double> st, double t)
 
 double x_t(vector<double> st, double t)
 {
-	return inputDescr.Vt;
+	return inputDescr.Vtx;
 }
 double y_t(vector<double> st, double t)
 {
-	return 0.0;
+	return inputDescr.Vty;
 }
 double z_t(vector<double> st, double t)
 {
