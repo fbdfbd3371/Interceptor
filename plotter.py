@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ===== НАСТРОЙКИ =====
-filePath = "results/phi_60.500000.txt"    # файл с данными
+filePath = "results/phi_20.000000.txt"    # файл с данными
 losStep = 0.3            # шаг линий визирования, сек
 # =====================
 
@@ -25,8 +25,8 @@ losEveryNSteps = int(round(losStep / dt))
 plt.figure(figsize=(8, 8))
 
 # Траектории
-plt.plot(xi, yi, label="Interceptor", linewidth=2)
-plt.plot(xt, yt, label="Target", linewidth=2)
+plt.plot(xi, yi, label="Перехватчик", linewidth=5)
+plt.plot(xt, yt, label="Цель", linewidth=5)
 
 # Линии визирования + подписи
 for i in range(0, len(t), losEveryNSteps):
@@ -54,11 +54,11 @@ for i in range(0, len(t), losEveryNSteps):
     )
 
 # Оформление
-plt.xlabel("X, m")
-plt.ylabel("Y, m")
-plt.title("Trajectories and Line-of-Sight")
-plt.legend()
+plt.xlabel("x, м", fontsize=20)
+plt.ylabel("y, м", fontsize=20)
+plt.legend(fontsize=20)
 plt.grid(True)
 plt.axis("equal")
+plt.tick_params(axis="both", labelsize=16)
 
 plt.show()
