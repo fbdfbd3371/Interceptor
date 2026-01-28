@@ -154,12 +154,7 @@ double Vty(vector<double> st, double t)
 
 double pitchDeg(vector<double> st, double t)
 {
-	return pitch(st, t) * 180.0 / M_PI;
-}
-
-double pitch(vector<double> st, double t)
-{
-	return st[sId(Tetta_k)];
+	return st[sId(pitch)] * 180.0 / M_PI;
 }
 
 double THETADeriv(vector<double> st, double t)
@@ -278,7 +273,7 @@ static double alpha(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	res = pitch(st, t) - st[sId(Tetta_k)]; //?????
+	res = st[sId(pitch)] - st[sId(Tetta_k)]; //?????
 	return res;
 }
 
@@ -571,9 +566,20 @@ double omg_z(vector<double> st, double t)
 {
 	double res;
 	// Должно быть так:
-	double resM_z_val = resMr_z(st, t);
-	double alpha_val = alpha(st, t);
-	res = resM_z_val * alpha_val / inputDescr.Jz;
+	// double resM_z_val = resMr_z(st, t);
+	// double alpha_val = alpha(st, t);
+
+	// res = resM_z_val * alpha_val / inputDescr.Jz;
+	res = resM_z(st, t) * alpha(st,t) / inputDescr.Jz;
+	return res;
+}
+
+double pitch(vector<double> st, double t)
+{
+	double res;
+	double gamma = 0;
+	// Должно быть так:
+	res = st[sId(omg_y)] * sin(gamma) + st[sId(omg_z)] * cos(gamma);
 	return res;
 }
 
@@ -582,7 +588,7 @@ double yaw(vector<double> st, double t)
 	double res;
 	double gamma = 0;
 	// Должно быть так:
-	res = (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma)) / cos(pitch(st, t));
+	res = (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma)) / cos(st[sId(pitch)]);
 	return res;
 }
 
@@ -591,7 +597,7 @@ double roll(vector<double> st, double t)
 	double res;
 	double gamma = 0;
 	// Должно быть так:
-	res = st[sId(omg_x)] - tan(pitch(st, t)) * (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
+	res = st[sId(omg_x)] - tan(st[sId(pitch)]) * (st[sId(omg_y)] * cos(gamma) - st[sId(omg_z)] * sin(gamma));
 	return res;
 }
 

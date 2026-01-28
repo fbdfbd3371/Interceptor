@@ -20,7 +20,6 @@ double Vix(vector<double> st, double t);
 double Vtx(vector<double> st, double t);
 double Vty(vector<double> st, double t);
 double pitchDeg(vector<double> st, double t);
-double pitch(vector<double> st, double t);
 
 double THETADeriv(vector<double> st, double t);
 double THETADerivDeg(vector<double> st, double t);
@@ -42,6 +41,7 @@ enum class sId_t
 	omg_x,
 	omg_y,
 	omg_z,
+	pitch,
 	yaw,
 	roll,
 	x_i,
@@ -71,6 +71,9 @@ double omg_y(vector<double> st, double t);
 
 // omg_z - �������� ������� �������� �� Oz1 ��������� ��
 double omg_z(vector<double> st, double t);
+
+// pitch - ������
+double pitch(vector<double> st, double t);
 
 // yaw - ��������
 double yaw(vector<double> st, double t);

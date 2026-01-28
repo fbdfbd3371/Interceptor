@@ -11,7 +11,7 @@ int main()
 
 	double Vi0{10.0};
 	double xt0{-250};
-	inputDescr.propoN = 20.0;
+	inputDescr.propoN = 2.0;
 
 	inputDescr.rhss.push_back(V_k);
 	inputDescr.rhss.push_back(Tetta_k);
@@ -19,6 +19,7 @@ int main()
 	inputDescr.rhss.push_back(omg_x);
 	inputDescr.rhss.push_back(omg_y);
 	inputDescr.rhss.push_back(omg_z);
+	inputDescr.rhss.push_back(pitch);
 	inputDescr.rhss.push_back(yaw);
 	inputDescr.rhss.push_back(roll);
 	inputDescr.rhss.push_back(x_i);
@@ -37,6 +38,7 @@ int main()
 	inputDescr.init_conds.push_back(0);				  // omega_x,
 	inputDescr.init_conds.push_back(0);				  // omega_y,
 	inputDescr.init_conds.push_back(0);				  // omega_z,
+	inputDescr.init_conds.push_back((90) * PI / 180); // pitch
 	inputDescr.init_conds.push_back(0);				  // yaw
 	inputDescr.init_conds.push_back(0);				  // roll
 	inputDescr.init_conds.push_back(0);				  // x_i
@@ -52,6 +54,7 @@ int main()
 	inputDescr.prm_names.push_back(std::pair("omega_x, rad/s", false));
 	inputDescr.prm_names.push_back(std::pair("omega_y, rad/s", false));
 	inputDescr.prm_names.push_back(std::pair("omega_z, rad/s", false));
+	inputDescr.prm_names.push_back(std::pair("pitch, rad", false));
 	inputDescr.prm_names.push_back(std::pair("yaw, rad", false));
 	inputDescr.prm_names.push_back(std::pair("roll, rad", false));
 	inputDescr.prm_names.push_back(std::pair("x_i, m", true));
@@ -121,6 +124,7 @@ int main()
 		inputDescr.init_conds.push_back(0.0);				 // omega_x,
 		inputDescr.init_conds.push_back(0.0);				 // omega_y,
 		inputDescr.init_conds.push_back(0.0);				 // omega_z,
+		inputDescr.init_conds.push_back(curPhi);			 // pitch
 		inputDescr.init_conds.push_back(0.0);				 // yaw
 		inputDescr.init_conds.push_back(0.0);				 // roll
 		inputDescr.init_conds.push_back(0.0);				 // x_i
