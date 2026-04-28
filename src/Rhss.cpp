@@ -224,7 +224,7 @@ double Vc(vector<double> st, double t)
 
 bool missStopCriteria(vector<double> st, double t)
 {
-	if (r(st, t) < 3.0)
+	if (r(st, t) < 0.4)
 		return true;
 
 	return false;

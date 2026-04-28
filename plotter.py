@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ===== НАСТРОЙКИ =====
-filePath = "results/phi_20.000000.txt"    # файл с данными
+filePath = "results/phi_40.000000.txt"    # файл с данными
 losStep = 0.3            # шаг линий визирования, сек
 # =====================
 
